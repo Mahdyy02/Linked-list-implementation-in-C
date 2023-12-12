@@ -106,6 +106,46 @@ void print_list(List* L){
     printf("]\n");
 }
 
+void remove_element_by_index(List* L, unsigned int index){
+
+    if(list_len(L) < index){
+        printf("Element out of index.\n");
+        return;
+    }else if(index == list_len(L)-1){
+        list_pop(L);
+        return;
+    }else if(index == 0){
+        Node *Node_to_delete = L->head;
+        L->head = L->head->next;
+        free(Node_to_delete);
+        return;
+    }
+
+    Node *iter = L->head;
+    for(int i = 0; i < index - 1 && iter !=NULL; i++) iter = iter->next;
+    Node *Node_to_delete = iter->next;
+    iter->next = iter->next->next;
+    free(Node_to_delete);
+
+}
+
+void delete_first_element(List* L){
+    remove_element_by_index(L, 0);
+}
+
+int remove_element(List* L, unsigned int value){
+
+    Node* iter = L->head;
+    for(int i = 0; iter != NULL; i++){
+        if(iter->value == value){
+            remove_element_by_index(L, i);
+            return i;
+        }
+        iter = iter->next;
+    }
+    return -1;
+}
+
 int main(){
 
     List L1;
@@ -119,14 +159,23 @@ int main(){
     list_append(&L1, 7);
     list_append(&L1, 8);
     list_append(&L1, 9);
-    list_pop(&L1);
+    // printf("%i\n", list_pop(&L1));
 
+    remove_element_by_index(&L1, 0);
     print_list(&L1);
-    printf("%i\n", list_len(&L1));
-    printf("%i\n", get_element_by_index(&L1, 2));
-    printf("%i\n", get_element_by_index(&L1, 3));
+    remove_element_by_index(&L1, list_len(&L1)-1);
+    print_list(&L1);
+    remove_element_by_index(&L1, 1000);
+    print_list(&L1);
+    remove_element_by_index(&L1, 3);
+    print_list(&L1);
+
+    // print_list(&L1);
+    // printf("%i\n", list_len(&L1));
+    // printf("%i\n", get_element_by_index(&L1, 2));
+    // printf("%i\n", get_element_by_index(&L1, 3));
     destroy_list(&L1);
-    print_list(&L1);
+    // print_list(&L1);
 
     return 0;
 }
